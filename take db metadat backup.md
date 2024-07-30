@@ -1,95 +1,101 @@
-To copy all properties of tables present in a schema into a new table, you can write a SQL script that collects metadata about tables, columns, indexes, foreign keys, and triggers. Here’s a comprehensive approach using MySQL stored procedures and temporary tables.
+To copy all properties of each table present in a schema (including columns, indexes, foreign keys, and triggers) into a new schema or table for documentation purposes, you can follow these steps. Here, we'll write SQL scripts to gather all necessary information and store it in a structured format.
 
-### Step 1: Create the Destination Table for Metadata
+### 1. Create a Table to Store the Metadata
 
-First, create a table to store the metadata information.
+First, create a table to store the metadata of all tables from the schema.
 
 ```sql
-CREATE TABLE schema_metadata (
+CREATE TABLE table_metadata (
     table_name VARCHAR(255),
-    property_type VARCHAR(50),
-    property_name VARCHAR(255),
-    property_details TEXT
+    column_name VARCHAR(255),
+    data_type VARCHAR(255),
+    is_nullable VARCHAR(3),
+    column_default VARCHAR(255),
+    index_name VARCHAR(255),
+    index_type VARCHAR(255),
+    index_non_unique INT,
+    foreign_key_name VARCHAR(255),
+    referenced_table_name VARCHAR(255),
+    referenced_column_name VARCHAR(255),
+    trigger_name VARCHAR(255),
+    trigger_event VARCHAR(255),
+    trigger_timing VARCHAR(255),
+    trigger_statement TEXT
 );
 ```
 
-### Step 2: Create a Stored Procedure to Collect Metadata
+### 2. Generate and Execute Queries to Insert Metadata
 
-Next, create a stored procedure to collect metadata about all tables in the schema and insert it into the `schema_metadata` table.
+Now, generate and execute SQL queries to populate the `table_metadata` table with information about columns, indexes, foreign keys, and triggers.
 
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE collect_schema_metadata()
+CREATE PROCEDURE collect_table_metadata()
 BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE tbl_name VARCHAR(255);
-    DECLARE cur CURSOR FOR SELECT table_name FROM information_schema.tables WHERE table_schema = 'your_schema_name';
+    DECLARE cur CURSOR FOR SELECT table_name FROM information_schema.tables WHERE table_schema = 'eddb';
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-    -- Open cursor
     OPEN cur;
 
-    -- Loop through all tables
     read_loop: LOOP
         FETCH cur INTO tbl_name;
         IF done THEN
             LEAVE read_loop;
         END IF;
 
-        -- Collect column information
-        INSERT INTO schema_metadata (table_name, property_type, property_name, property_details)
-        SELECT tbl_name, 'COLUMN', column_name, CONCAT('Data Type: ', data_type, ', Is Nullable: ', is_nullable, ', Default: ', column_default)
-        FROM information_schema.columns
-        WHERE table_name = tbl_name AND table_schema = 'your_schema_name';
+        -- Insert column information
+        SET @s1 = CONCAT('INSERT INTO table_metadata (table_name, column_name, data_type, is_nullable, column_default) SELECT "', tbl_name, '", column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = "', tbl_name, '" AND table_schema = ''eddb'';');
+        PREPARE stmt1 FROM @s1;
+        EXECUTE stmt1;
+        DEALLOCATE PREPARE stmt1;
 
-        -- Collect index information
-        INSERT INTO schema_metadata (table_name, property_type, property_name, property_details)
-        SELECT tbl_name, 'INDEX', index_name, CONCAT('Index Type: ', index_type, ', Non Unique: ', non_unique, ', Column Name: ', column_name)
-        FROM information_schema.statistics
-        WHERE table_name = tbl_name AND table_schema = 'your_schema_name';
+        -- Insert index information
+        SET @s2 = CONCAT('INSERT INTO table_metadata (table_name, index_name, index_type, index_non_unique) SELECT "', tbl_name, '", index_name, index_type, non_unique FROM information_schema.statistics WHERE table_name = "', tbl_name, '" AND table_schema = ''eddb'';');
+        PREPARE stmt2 FROM @s2;
+        EXECUTE stmt2;
+        DEALLOCATE PREPARE stmt2;
 
-        -- Collect foreign key information
-        INSERT INTO schema_metadata (table_name, property_type, property_name, property_details)
-        SELECT tbl_name, 'FOREIGN KEY', constraint_name, CONCAT('Column Name: ', column_name, ', Referenced Table: ', referenced_table_name, ', Referenced Column: ', referenced_column_name)
-        FROM information_schema.key_column_usage
-        WHERE table_name = tbl_name AND table_schema = 'your_schema_name' AND referenced_table_name IS NOT NULL;
+        -- Insert foreign key information
+        SET @s3 = CONCAT('INSERT INTO table_metadata (table_name, foreign_key_name, referenced_table_name, referenced_column_name) SELECT "', tbl_name, '", constraint_name, referenced_table_name, referenced_column_name FROM information_schema.key_column_usage WHERE table_name = "', tbl_name, '" AND table_schema = ''eddb'' AND referenced_table_name IS NOT NULL;');
+        PREPARE stmt3 FROM @s3;
+        EXECUTE stmt3;
+        DEALLOCATE PREPARE stmt3;
 
-        -- Collect trigger information
-        INSERT INTO schema_metadata (table_name, property_type, property_name, property_details)
-        SELECT tbl_name, 'TRIGGER', trigger_name, CONCAT('Event: ', event_manipulation, ', Timing: ', action_timing, ', Statement: ', action_statement)
-        FROM information_schema.triggers
-        WHERE event_object_table = tbl_name AND trigger_schema = 'your_schema_name';
+        -- Insert trigger information
+        SET @s4 = CONCAT('INSERT INTO table_metadata (table_name, trigger_name, trigger_event, trigger_timing, trigger_statement) SELECT "', tbl_name, '", trigger_name, event_manipulation, action_timing, action_statement FROM information_schema.triggers WHERE event_object_table = "', tbl_name, '" AND trigger_schema = ''eddb'';');
+        PREPARE stmt4 FROM @s4;
+        EXECUTE stmt4;
+        DEALLOCATE PREPARE stmt4;
 
     END LOOP;
 
-    -- Close cursor
     CLOSE cur;
 END //
 
 DELIMITER ;
 ```
 
-### Step 3: Execute the Stored Procedure
+### 3. Execute the Stored Procedure
 
-Once the stored procedure is created, execute it to populate the `schema_metadata` table with all the necessary information.
-
-```sql
-CALL collect_schema_metadata();
-```
-
-### Step 4: View or Export the Metadata
-
-You can now view the collected metadata by querying the `schema_metadata` table.
+Once the stored procedure is created, execute it to populate the `table_metadata` table with all the necessary information.
 
 ```sql
-SELECT * FROM schema_metadata;
+CALL collect_table_metadata();
 ```
 
-### Explanation
+### 4. View the Collected Metadata
 
-- **Table Creation**: The `schema_metadata` table is created to store the metadata information.
-- **Stored Procedure**: The `collect_schema_metadata` procedure iterates through all tables in the specified schema (`your_schema_name`), collects metadata for columns, indexes, foreign keys, and triggers, and inserts this information into the `schema_metadata` table.
-- **Execution**: The stored procedure is executed to populate the metadata table.
+You can now view the collected metadata by querying the `table_metadata` table.
 
-Replace `your_schema_name` with the actual name of your schema. This script will help you collect and store all properties of tables in your schema in a structured format.
+```sql
+SELECT * FROM table_metadata;
+```
+
+### 5. Export the Results
+
+Finally, you can export the results from the `table_metadata` table using your MySQL client's export functionality.
+
+This approach ensures that you collect comprehensive metadata for all tables in the specified schema, including columns, indexes, foreign keys, and triggers. The stored procedure automates the collection process, making it efficient even for databases with a large number of tables.
