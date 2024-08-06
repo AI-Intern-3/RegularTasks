@@ -1,53 +1,128 @@
-### 7. Place Application Folder in Smartcookie Folder
+### Steps to Create Environment for PHP Developer 20211129 RK1
 
-To successfully place the application folder in the `smartcookie` directory under XAMPP, follow these detailed steps:
-
-#### Step 1: Locate the Application Folder
-
-1. **Identify the Application Folder:**
-   - This is the folder containing your web application files, which might include PHP scripts, HTML files, CSS stylesheets, JavaScript files, images, and other resources.
-
-2. **Know the Location:**
-   - Make sure you know where this folder is stored on your computer. It could be in your `Downloads` folder, `Documents`, or another location where you’ve developed or stored your web application.
-
-#### Step 2: Locate the XAMPP `htdocs` Directory
-
-1. **Open File Explorer:**
-   - Use File Explorer to navigate to the XAMPP installation directory.
-
-2. **Navigate to `htdocs`:**
-   - Go to `C:\xampp\htdocs\`. The `htdocs` folder is the root directory where all your local web projects are stored. When you access `http://localhost` in your web browser, it points to this directory.
-
-3. **Locate or Create `localhost` Folder:**
-   - Inside the `htdocs` directory, there should be a folder named `localhost`. If it doesn't exist, right-click inside the `htdocs` folder, choose "New" > "Folder", and name it `localhost`.
-
-4. **Locate or Create `smartcookie` Folder:**
-   - Inside the `localhost` folder, ensure there is a folder named `smartcookie`. If it doesn't exist, create it the same way as the previous step.
-
-#### Step 3: Copy the Application Folder
-
-1. **Select the Application Folder:**
-   - Find your application folder that you want to move into the `smartcookie` directory. Click on it to select.
-
-2. **Copy the Folder:**
-   - Right-click the selected folder and choose "Copy" from the context menu, or simply press `Ctrl + C` on your keyboard.
-
-3. **Paste the Folder into `smartcookie`:**
-   - Navigate to `C:\xampp\htdocs\localhost\smartcookie\` using File Explorer.
-   - Right-click inside the `smartcookie` folder and choose "Paste" from the context menu, or press `Ctrl + V` on your keyboard.
-
-4. **Verify the Copying Process:**
-   - Ensure that all files and subdirectories from your application folder have been copied into the `smartcookie` folder. It’s important that the directory structure remains intact to avoid any issues with file paths in your application.
-
-#### Step 4: Confirm the Setup
-
-1. **Access the Application via Browser:**
-   - Open a web browser and type `http://localhost.smartcookie.in` into the address bar. This URL corresponds to the virtual host you previously set up.
-   - If everything is correctly configured, your application should load in the browser, indicating that the files are correctly placed in the `smartcookie` folder.
-
-2. **Troubleshoot if Necessary:**
-   - If the application does not load, double-check the paths, ensure that the Apache service is running in XAMPP, and verify that the files are correctly placed in the `smartcookie` directory.
+**Operating System:** Windows
 
 ---
 
-This process ensures that your application is correctly placed in the XAMPP directory structure, making it accessible via your configured local domain.
+#### 1. Install XAMPP (30 minutes)
+
+a. **Download:**
+   - [XAMPP 5.6.40 for Windows (64-bit)](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/5.6.40/xampp-portable-windows-x64-5.6.40-1-VC11-installer.exe/download)
+  
+b. **Install:**
+   - Follow the installation instructions (5 minutes).
+
+---
+
+#### 2. Install GIT (20 minutes)
+
+a. **Download:**
+   - [Git 2.34.1 for Windows (64-bit)](https://github.com/git-for-windows/git/releases/download/v2.34.1.windows.1/Git-2.34.1-64-bit.exe)
+
+---
+
+#### 3. Create `localhost.smartcookie.in` (5 minutes)
+
+a. **Locate hosts file:**
+   - Path: `C:\Windows\System32\drivers\etc\hosts`
+
+b. **Edit hosts file:**
+   - Open in a text editor (e.g., Sublime Text).
+   - Add the following line at the end of the file:
+     ```
+     127.0.0.1       localhost.smartcookie.in
+     ```
+
+c. **Locate `httpd-vhosts.conf`:**
+   - Path: `C:\xampp\apache\conf\extra\httpd-vhosts.conf`
+
+d. **Edit `httpd-vhosts.conf`:**
+   - Open in Sublime Text.
+   - Locate the `<VirtualHost *:80>` section and add the following:
+     ```apache
+     <VirtualHost *:80>
+       DocumentRoot "C:\xampp\htdocs\localhost\smartcookie\"
+       ServerName localhost.smartcookie.in
+       ServerAlias localhost.smartcookie.in
+     </VirtualHost>
+     ```
+
+---
+
+#### 4. Locate your XAMPP Folder
+
+- Path: `C:\XAMPP\htdocs\`
+
+---
+
+#### 5. Create `localhost` Folder
+
+- Create a new folder named `localhost` in the XAMPP `htdocs` directory.
+
+---
+
+#### 6. Clone Repositories Using Git
+
+a. **Right-click in the `localhost` folder:**
+   - Select "Git Bash Here".
+
+b. **Use the following Git Clone commands:**
+   ```bash
+   git clone https://internsbpsi@bitbucket.org/BPSI-Master/smartcookie.git
+   git clone https://internsbpsi@bitbucket.org/BPSI-Master/dev.cjnnow.com.git
+   git clone https://internsbpsi@bitbucket.org/BPSI-Master/startupworld_aws.git
+   ```
+
+   **Password:** `jnPxpGvtCh2B38PjgyVW`
+
+---
+
+#### 7. Place Application Folder in Smartcookie Folder
+
+- Copy the application folder into the `C:\xampp\htdocs\localhost\smartcookie\` directory.
+
+---
+
+#### 8. Add Connection Files (5 minutes)
+
+a. **Paste `conn.php` in the following folders:**
+   - `C:\xampp\htdocs\localhost\smartcookie\core\`
+   - `C:\xampp\htdocs\localhost\smartcookie\core\webservice\`
+   - All Version Folders (e.g., `Version2`, `Version4`, etc.)
+
+b. **Paste `connsqli.php` in the `core` folder:**
+   - Path: `C:\xampp\htdocs\localhost\smartcookie\core\`
+
+---
+
+#### 9. Modify `php.ini` (5 minutes)
+
+a. **Locate `php.ini`:**
+   - Path: `C:\xampp\php\php.ini`
+
+b. **Edit `php.ini`:**
+   - Open in Sublime Text.
+   - Search and replace the following lines:
+     ```
+     post_max_size=2048M
+     upload_max_filesize=2048M
+     memory_limit=2048M
+     max_execution_time=-1
+     max_input_time=-1
+     ```
+
+---
+
+#### 10. Start XAMPP Control Panel
+
+- Open the XAMPP Control Panel.
+
+---
+
+#### 11. Start Apache and MySQL Services
+
+- Click the "Start" button for both Apache and MySQL.
+
+---
+
+**Happy Coding!**
