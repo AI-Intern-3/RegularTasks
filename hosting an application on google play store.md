@@ -1,47 +1,99 @@
-To host an application on the Google Play Store, follow these steps:
+Here are the corrected and detailed steps for publishing the "SmartSalesPerson" application on the Google Play Store:
 
-1. **Create a Google Play Developer Account**:
-   - Go to the [Google Play Console](https://play.google.com/console/signup).
-   - Sign up using your Google account.
-   - Pay the one-time registration fee of $25.
-   - Fill out the necessary details to complete your account setup.
+### **Steps to Publish "SmartSalesPerson" Application on Google Play Store**
 
-2. **Prepare Your Application**:
-   - Ensure your application meets Google Play’s [Developer Program Policies](https://play.google.com/about/developer-content-policy/).
-   - Test your application thoroughly on various devices and screen sizes.
-   - Prepare the necessary assets like app icons, feature graphics, screenshots, and a promotional video (if applicable).
+#### **Prerequisites:**
+- You should have a Google Play Console registration.
+- The application's AAB file as per the latest Android SDK requirements.
 
-3. **Build and Sign Your App**:
-   - Compile your app into an APK or AAB (Android App Bundle) file.
-   - Sign your app with a private key using the Android App Signing process.
+#### **Options:**
+1. **For uploading a new application**
+2. **For publishing a new release of an already published application**
 
-4. **Upload Your App to the Google Play Console**:
-   - Log in to your Google Play Developer account.
-   - Navigate to “All Applications” and click on “Create Application.”
-   - Select a default language, enter a title for your app, and click “Create.”
-   - Complete the app’s store listing by filling out details such as app description, screenshots, category, and contact details.
+For the above procedures, you should have a key alias with a .jks key for the old release, or you can build using certificates present in the console's app integration section.
 
-5. **Prepare Store Listing**:
-   - Fill in the required fields such as app name, description, screenshots, and promotional assets.
-   - Choose the appropriate category and provide a detailed description of your app.
+### **Steps:**
 
-6. **Set Up Pricing and Distribution**:
-   - Decide whether your app will be free or paid.
-   - Select the countries where you want your app to be available.
-   - Set up the app’s pricing and distribution settings.
+1. **Login to the Google Play Console**
+2. **Click "Create App"**
+3. **Fill in the details**:
+   - Name of the application
+   - Free or paid
+   - Check policies
+   - Create the application
 
-7. **Submit Your App for Review**:
-   - Review and complete the “Content Rating” questionnaire.
-   - Provide details about app content and features for user ratings.
-   - Fill in the necessary information under the “App Content” section.
+This will navigate you to the dashboard with the following options:
 
-8. **Launch Your App**:
-   - Once all required fields are filled out, you can review your app for any errors or missing information.
-   - When everything is ready, click “Release to Production” to publish your app.
-   - Google will review your app, which may take a few hours to a few days.
+1. **Testing Application**:
+   - You can add emails of testers in this field.
+   - It is not necessary to add testers and test your application.
 
-9. **Monitor and Update Your App**:
-   - After your app is published, monitor its performance using the Google Play Console.
-   - Respond to user feedback and update your app regularly to fix bugs, add features, and improve user experience.
+### **Configuration for Public Release:**
 
-By following these steps, you can successfully host your application on the Google Play Store.
+#### **App Policy:**
+1. **Add App Policy Link**:
+   - Create an app policy link and add it here.
+   - For "SmartSalesPerson," we have created the following link: [TermsFeed](https://www.termsfeed.com/live/b54d2919-f888-45ee-a3ce-f1e8be39ef5d)
+
+#### **App Access Mode:**
+1. **Select App Access Mode**:
+   - If you select "All Functionality Enabled," there will be no need to configure further steps.
+   - If your app has some restrictions, select the second option and fill in the details as per the developer's guide.
+
+#### **Content Rating:**
+1. **Complete the Questionnaire**:
+   - Read the questionnaire and fill in the details.
+
+#### **Target Audience and Content:**
+1. **Select Target Audience**:
+   - Indicate whether your application is for children.
+
+#### **News Application:**
+1. **Data Safety**:
+   - This is an important step for configuration selection.
+   - If you are sharing any data with third parties, select "Yes"; otherwise, continue with "No."
+   - Options will contain the app login method and a link for user data recovery. You can copy the link here.
+   - Select "Yes" if you provided a link and give the link used above.
+   - Click "Next." Here you can create a new selection for DATA SAFETY as per the developer guide or download and upload a CSV file.
+
+#### **Government App:**
+1. **Selection for Government App**:
+   - Follow the specific guidelines for government apps.
+
+#### **Financial Feature:**
+1. **Add Financial Features**:
+   - If applicable, add financial features.
+
+#### **Health Feature:**
+1. **Add Health Features**:
+   - If applicable, add health features.
+
+### **Store Settings:**
+
+1. **Select App Category and Set Up Store Listing**:
+   - Add store contact details.
+
+2. **Store Listing**:
+   - Add screenshots and images for 7-inch, 10-inch, and Chromebook devices.
+   - Add a minimum of 20 testers' email addresses (optional). You can do this task using a .csv file.
+
+### **Release Your App:**
+
+1. **Go to the End Tab in the Dashboard**:
+   - Here you will find the option to publish the app.
+   - Before that, add a release first.
+   - Select all countries and regions.
+   - Click on "App Integrity."
+   - Choose the signing key. If you are upgrading or have a previous app, select the old key. If you are uploading a new app and don't have any key, you can use the Google-created key.
+   - Upload your AAB file to the console.
+   - Add release notes.
+
+### **Final Steps:**
+
+1. **After Releasing Your App**:
+   - You will find the following dashboard:
+   - For complete application publishing, you will need some time until it is in Google review. Here it will check all requirement fulfillment from Google. After a successful review, it will send it for publishing.
+
+You can check your app here: [SmartSalesPerson on Google Play Store](https://play.google.com/store/apps/details?id=com.blueplanet.smartSalesperson&pcampaignid=web_share)
+
+If you need any further assistance, feel free to ask!
