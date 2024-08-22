@@ -1,3 +1,82 @@
+To ensure a safe rollback in case something goes wrong, it's important to back up the current Netplan configuration before making any changes. Here's an updated step-by-step guide with the backup process included.
+
+### Step-by-Step Instructions for Static Routing with Backup:
+
+1. **Access the Server**:
+   - SSH into your Contabo server (the one with IP `192.51.100.10`).
+
+   ```bash
+   ssh user@192.51.100.10
+   ```
+
+2. **Backup the Current Netplan Configuration**:
+   - Before making any changes, create a backup of the current Netplan configuration file. This allows you to revert if needed.
+
+   ```bash
+   sudo cp /etc/netplan/01-netcfg.yaml /etc/netplan/01-netcfg.yaml.bak
+   ```
+
+3. **Edit the Netplan Configuration File**:
+   - Open the `/etc/netplan/01-netcfg.yaml` file using a text editor such as `nano` or `vi`.
+
+   ```bash
+   sudo nano /etc/netplan/01-netcfg.yaml
+   ```
+
+4. **Add Static Routes**:
+   - Add the following static routes under the `eth0` interface, ensuring the correct indentation:
+
+   ```yaml
+   network:
+     version: 2
+     renderer: networkd
+     ethernets:
+       eth0:
+         dhcp4: true
+         routes:
+           - to: 94.136.185.128/25
+             via: 94.136.185.145
+           - to: 94.136.186.128/25
+             via: 94.136.186.169
+   ```
+
+5. **Save and Exit**:
+   - Save the file and exit the text editor (`Ctrl+X` in nano, then press `Y` and `Enter`).
+
+6. **Apply the Netplan Configuration**:
+   - To safely apply the changes without risking network disconnection, use the following command to flush the routing table and cache before applying the new configuration:
+
+   ```bash
+   sudo ip route flush table main; sudo ip route flush cache; sudo netplan apply
+   ```
+
+7. **Verify Routing**:
+   - After applying the changes, check if the routing is correctly configured:
+
+   ```bash
+   ip route
+   ```
+
+8. **Revert to the Original Netplan Configuration (if needed)**:
+   - If there are any issues after applying the changes, you can easily revert to the original configuration by restoring the backup:
+
+   ```bash
+   sudo cp /etc/netplan/01-netcfg.yaml.bak /etc/netplan/01-netcfg.yaml
+   sudo netplan apply
+   ```
+
+### Summary:
+1. **Backup** the original configuration (`cp /etc/netplan/01-netcfg.yaml /etc/netplan/01-netcfg.yaml.bak`).
+2. Edit `/etc/netplan/01-netcfg.yaml` to include static routes.
+3. Apply the changes with `netplan apply` after flushing the routing table.
+4. **Revert** to the backup configuration if needed (`cp /etc/netplan/01-netcfg.yaml.bak /etc/netplan/01-netcfg.yaml`).
+
+This process provides a secure method for adding static routes while allowing a quick rollback to the original settings.
+
+
+
+
+
 To minimize the risk of network downtime, we can use `netplan try`, which tests the new configuration for 120 seconds. If the network becomes unreachable or something goes wrong, the configuration will automatically revert back. Here's an updated step-by-step process using `netplan try`:
 
 ### Step-by-Step Instructions Using `netplan try`:
