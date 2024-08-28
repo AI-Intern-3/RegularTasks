@@ -20,3 +20,40 @@ smartcookie-terraform/
 ├── scripts/
 │   └── init.sh
 └── README.md
+
+
+smartcookie-terraform/
+├── modules/
+│   ├── vpc/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   ├── ec2/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   ├── s3/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   └── iam/
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── outputs.tf
+├── envs/
+│   ├── dev/
+│   │   ├── main.tf
+│   │   ├── backend.tf
+│   │   ├── provider.tf
+│   │   ├── variables.tf
+│   │   └── terraform.tfvars
+│   └── prod/
+│       ├── main.tf
+│       ├── backend.tf
+│       ├── provider.tf
+│       ├── variables.tf
+│       └── terraform.tfvars
+├── scripts/
+│   └── init.sh
+└── README.md
+
